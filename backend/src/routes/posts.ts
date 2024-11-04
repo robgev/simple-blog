@@ -6,7 +6,8 @@ router.post('/', async (req: Request, res: Response) => {
   try {
     console.log("HERE");
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    const err = new Error(error as string);
+    res.status(400).json({ error: err.message });
   }
 });
 
