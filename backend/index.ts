@@ -1,12 +1,17 @@
 import express from "express";
 import cors from "cors";
 import { supabase } from "./supabase";
+import postRoutes from './routes/posts';
+import commentRoutes from './routes/comments';
 
 const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
+
+app.use('/api/posts', postRoutes);
+app.use('/api/posts/:id/comments', commentRoutes);
 
 app.get('/', (_, res) => {
   res.send('Hello World!')
