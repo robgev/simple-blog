@@ -7,16 +7,25 @@ import { authenticateUser } from '../middlewares/auth';
 const router = express.Router();
 
 const postSchema = z.object({
+  id: z.number().or(z.undefined()),
   title: z.string().min(1),
   content: z.string().min(1),
+  created_by: z.string(),
 });
 
 const upsert = async (req: Request, res: Response) => {
   try {
-    const validated = postSchema.parse(req.body);
-    const { data, error } = await supabase.from('posts').upsert(validated);
+    const { user } = res.locals;
+    const payload = {
+      ...req.body,
+      created_by: user.id,
+    }
+    const validated = postSchema.parse(payload);
+    const { data, error } = await supabase.from('posts')
+      .upsert(validated)
+      .select();
     if (error) throw error;
-    res.status(201).json(data);
+    res.status(req.body.id ? 200 : 201).json(data);
   } catch (error) {
     // Error has type unknown in typescript
     // We just typecast for a quick solution

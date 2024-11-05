@@ -11,19 +11,25 @@ const router = express.Router({ mergeParams: true });
 const postSchema = z.object({
   id: z.number().or(z.undefined()),
   content: z.string().min(1),
-  by_user: z.string().min(1),
+  post_id: z.string(),
+  by_user: z.string(),
 });
 
 const upsert = async (req: Request, res: Response) => {
   try {
     const { post_id } = req.params
-    const validated = postSchema.parse(req.body);
-    const { data, error } = await supabase.from('comments').upsert({
-      ...validated,
+    const { user } = res.locals;
+    const payload = {
+      ...req.body,
       post_id,
-    });
+      by_user: user.id,
+    }
+    const validated = postSchema.parse(payload);
+    const { data, error } = await supabase.from('comments')
+      .upsert(validated)
+      .select();
     if (error) throw error;
-    res.status(201).json(data);
+    res.status(req.body.id ? 200 : 201).json(data);
   } catch (error) {
     // Error has type unknown in typescript
     // We just typecast for a quick solution
