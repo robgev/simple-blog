@@ -13,7 +13,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use('/api/posts', postRoutes);
-app.use('/api/posts/:id/comments', commentRoutes);
+app.use('/api/posts/:post_id/comments', commentRoutes);
 
 app.get('/', (_, res) => {
   res.send('Hello World!')
