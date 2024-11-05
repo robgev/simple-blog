@@ -1,8 +1,10 @@
 import express from "express";
 import cors from "cors";
+import "dotenv/config";
+
 import { supabase } from "./supabase";
-import postRoutes from './routes/posts';
-import commentRoutes from './routes/comments';
+import postRoutes from "./routes/posts";
+import commentRoutes from "./routes/comments";
 
 const app = express();
 const port = process.env.PORT || 3000;
