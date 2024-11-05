@@ -2,6 +2,7 @@ import express, { Request, Response } from 'express';
 import { z } from 'zod';
 import { supabase } from '../supabase';
 import { POSTS_PAGE_SIZE } from '../constants';
+import { authenticateUser } from '../middlewares/auth';
 
 const router = express.Router();
 
@@ -23,10 +24,10 @@ const upsert = async (req: Request, res: Response) => {
   }
 }
 
-router.post('/', upsert);
-router.put('/', upsert);
+router.post('/', authenticateUser, upsert);
+router.put('/', authenticateUser, upsert);
 
-router.get('/', async (req: Request, res: Response) => {
+router.get('/', authenticateUser, async (req: Request, res: Response) => {
   try {
     const { page } = req.query;
 
@@ -45,7 +46,7 @@ router.get('/', async (req: Request, res: Response) => {
   }
 });
 
-router.get('/:id', async (req: Request, res: Response) => {
+router.get('/:id', authenticateUser, async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const { data, error } = await supabase.from('posts')
@@ -59,7 +60,7 @@ router.get('/:id', async (req: Request, res: Response) => {
   }
 });
 
-router.delete('/:id', async (req: Request, res: Response) => {
+router.delete('/:id', authenticateUser, async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const { error } = await supabase.from('posts')

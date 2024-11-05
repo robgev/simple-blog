@@ -2,6 +2,7 @@ import express, { Request, Response } from 'express';
 import { z } from 'zod';
 import { supabase } from '../supabase';
 import { POSTS_PAGE_SIZE } from '../constants';
+import { authenticateUser } from '../middlewares/auth';
 
 // Path params are not accessible by default by 
 // sub-routes. We need mergeParams to access post_id
@@ -30,10 +31,10 @@ const upsert = async (req: Request, res: Response) => {
   }
 }
 
-router.post('/', upsert);
-router.put('/', upsert);
+router.post('/', authenticateUser, upsert);
+router.put('/', authenticateUser, upsert);
 
-router.get('/', async (req: Request, res: Response) => {
+router.get('/', authenticateUser, async (req: Request, res: Response) => {
   try {
     const { page } = req.query;
     const { post_id } = req.params
@@ -54,7 +55,7 @@ router.get('/', async (req: Request, res: Response) => {
   }
 });
 
-router.delete('/:id', async (req: Request, res: Response) => {
+router.delete('/:id', authenticateUser, async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const { error } = await supabase.from('comments')

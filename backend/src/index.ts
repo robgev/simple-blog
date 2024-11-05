@@ -5,6 +5,7 @@ import "dotenv/config";
 import { supabase } from "./supabase";
 import postRoutes from "./routes/posts";
 import commentRoutes from "./routes/comments";
+import authRoutes from './routes/auth';
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -12,6 +13,7 @@ const port = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
+app.use('/api/user', authRoutes)
 app.use('/api/posts', postRoutes);
 app.use('/api/posts/:post_id/comments', commentRoutes);
 
