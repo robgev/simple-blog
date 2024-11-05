@@ -26,21 +26,34 @@ const upsert = async (req: Request, res: Response) => {
 router.post('/', upsert);
 router.put('/', upsert);
 
-
 router.get('/', async (req: Request, res: Response) => {
   try {
-    const { pageNumber } = req.query;
+    const { page } = req.query;
 
-    if (!pageNumber) throw new Error("Specify page number");
+    if (!page) throw new Error("Specify page number");
 
-    const parsedPage = parseInt(pageNumber as string);
+    const pageNumber = parseInt(page as string);
     const { data, error } = await supabase.from('posts')
       .select("*")
       // supabase range function is 0 based and right inclusive
-      .range(parsedPage * POSTS_PAGE_SIZE, (parsedPage + 1) * POSTS_PAGE_SIZE - 1);
+      .range(pageNumber * POSTS_PAGE_SIZE, (pageNumber + 1) * POSTS_PAGE_SIZE - 1);
 
     if (error) throw error;
     res.status(200).json(data);
+  } catch (error) {
+    res.status(400).json({ error: (error as Error).message });
+  }
+});
+
+router.get('/:id', async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const { data, error } = await supabase.from('posts')
+      .select("*")
+      .eq('id', id);
+
+    if (error) throw error;
+    res.status(200).send(data);
   } catch (error) {
     res.status(400).json({ error: (error as Error).message });
   }
