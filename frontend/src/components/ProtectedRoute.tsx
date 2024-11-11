@@ -1,21 +1,15 @@
-import React from 'react';
-import { Navigate } from 'react-router-dom';
+import React from "react";
+import { Navigate, Outlet, RouteProps } from "react-router-dom";
+import { TokenProvider } from "../utils/tokenProvider";
 
-interface ProtectedRouteProps {
-  children: JSX.Element;
-}
+const ProtectedRoute: React.FC<RouteProps> = () => {
+  const token = TokenProvider.get();
 
-const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
-  // Get session with query
-  //const session = supabase.auth.session(); // Check the current session
-  const session = null;
-
-  if (!session) {
-    // Redirect to login if there is no active session
+  if (!token) {
     return <Navigate to="/login" replace />;
   }
 
-  return children; // Render the protected component if authenticated
+  return <Outlet />;
 };
 
 export default ProtectedRoute;

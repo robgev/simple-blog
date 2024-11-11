@@ -1,33 +1,28 @@
-import { useState } from 'react'
-import { useQuery } from '@tanstack/react-query'
-import viteLogo from '/vite.svg'
-import '../App.css'
-import reactLogo from '../assets/react.svg'
-import { axiosClient } from '../utils/axios'
-import { endpoints } from '../utils/endpoints'
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import viteLogo from "/vite.svg";
+import "../App.css";
+import reactLogo from "../assets/react.svg";
+import { axiosClient } from "../utils/axios";
+import { endpoints } from "../utils/endpoints";
+import { TokenProvider } from "../utils/tokenProvider";
 
 function App() {
-  const [count, setCount] = useState(0)
-
-  const { data: user, isLoading: isLoadingUser } = useQuery({
-    queryKey: ["jser"],
-    queryFn: () => axiosClient.post(endpoints.auth.login, {
-      email: "robert1999.g@gmail.com",
-      password: "sOmeH4sh"
-    })
-  });
+  const [count, setCount] = useState(0);
+  const token = TokenProvider.get();
 
   const { data, isLoading } = useQuery({
     queryKey: ["test"],
-    enabled: !isLoadingUser,
-    queryFn: () => axiosClient.get(endpoints.posts.list(0), {
-      headers: {
-        Authorization: `Bearer ${user?.data.access_token}`
-      }
-    })
-  })
+    enabled: Boolean(token),
+    queryFn: () =>
+      axiosClient.get(endpoints.posts.list(0), {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }),
+  });
 
-  if (isLoading) return <span>Loading...</span>
+  if (isLoading) return <span>Loading...</span>;
 
   return (
     <>
@@ -50,10 +45,10 @@ function App() {
       </div>
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
-        { JSON.stringify(data?.data) || "DATA" }
+        {JSON.stringify(data?.data) || "DATA"}
       </p>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
