@@ -4,6 +4,9 @@ import { TPost } from "../types";
 const PostRow = ({ id, title, content, created_by: { email } }: TPost) => {
   return (
     <div className="border">
+      <div className="flex">
+        <div className="text-blue cursor-pointer">delete</div>
+      </div>
       <Link to={`/post/${id}`}>
         <h3>{title}</h3>
       </Link>

@@ -23,7 +23,7 @@ export default function Posts() {
         </Link>
       </div>
       {posts.map((post: TPost) => (
-        <PostRow {...post} />
+        <PostRow key={post.id} {...post} />
       ))}
     </>
   );

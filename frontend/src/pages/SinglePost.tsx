@@ -34,8 +34,8 @@ export default function SinglePost() {
       <hr />
       <h4>Comments</h4>
       <div>
-        {comments.map((comment: TComment) => (
-          <CommentRow {...comment} />
+        {comments?.map((comment: TComment) => (
+          <CommentRow key={comment.id} {...comment} />
         ))}
       </div>
     </div>
