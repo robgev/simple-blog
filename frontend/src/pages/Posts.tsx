@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { Link } from "react-router-dom";
 
 import PostRow from "../components/PostRow";
 import { fetcher } from "../utils/axios";
@@ -15,6 +16,12 @@ export default function Posts() {
 
   return (
     <>
+      <div className="flex align-center">
+        <h2 className="text-xl mr-5">Simple Blog Posts</h2>
+        <Link to="/post/create" className="align-right">
+          Create new
+        </Link>
+      </div>
       {posts.map((post: TPost) => (
         <PostRow {...post} />
       ))}

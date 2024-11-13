@@ -3,7 +3,7 @@ import { TPost } from "../types";
 
 const PostRow = ({ id, title, content, created_by: { email } }: TPost) => {
   return (
-    <div>
+    <div className="border">
       <Link to={`/post/${id}`}>
         <h3>{title}</h3>
       </Link>

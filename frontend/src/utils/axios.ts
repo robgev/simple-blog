@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { InternalAxiosRequestConfig } from "axios";
 import { TokenProvider } from "./tokenProvider";
 
 export const axiosClient = axios.create({
