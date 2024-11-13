@@ -5,14 +5,14 @@ export const endpoints = {
     user: "/user/user",
   },
   posts: {
-    byId: (id: string) => `/posts/${id}`,
+    byId: (id: number) => `/posts/${id}`,
     list: (page: number) => `/posts?page=${page}`,
     root: "/posts",
   },
   comments: {
-    byId: (postId: string, id: string) => `/posts/${postId}/comments/${id}`,
-    list: (postId: string, page: number) =>
+    byId: (postId: number, id: number) => `/posts/${postId}/comments/${id}`,
+    list: (postId: number, page: number) =>
       `/posts/${postId}/comments?page=${page}`,
-    root: (postId: string) => `/posts/${postId}/comments`,
+    root: (postId: number) => `/posts/${postId}/comments`,
   },
 };

@@ -7,13 +7,14 @@ import { endpoints } from "../utils/endpoints";
 import { TComment } from "../types";
 
 export default function SinglePost() {
-  const { id = "" } = useParams();
+  const params = useParams();
+  const id = parseInt(params.id || "0");
 
   // Maybe show toast on error
   const { data: post, isLoading } = useQuery({
     queryKey: ["post", id],
     enabled: Boolean(id),
-    queryFn: async () => fetcher(endpoints.posts.byId(id || "")),
+    queryFn: async () => fetcher(endpoints.posts.byId(id)),
   });
 
   const { data: comments, isLoading: isLoadingComments } = useQuery({
