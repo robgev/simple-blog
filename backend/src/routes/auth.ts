@@ -46,16 +46,13 @@ router.post("/register", async (req: Request, res: Response) => {
     password,
   });
 
-  if (!data.user || !data.session) throw new ServerError(400, "Sign up failed");
+  if (!data.user) throw new ServerError(400, "Sign up failed");
 
   const { id, role } = data.user;
-  const { access_token, refresh_token } = data.session;
   const user = {
     id,
     role,
     email,
-    access_token,
-    refresh_token,
   };
   if (error) throw new ServerError(error?.status || 400, error?.message);
   res.status(201).json(user);

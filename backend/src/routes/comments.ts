@@ -49,7 +49,16 @@ router.get("/", authenticateUser, async (req: Request, res: Response) => {
   const pageNumber = parseInt(page as string);
   const { data, error } = await supabase
     .from("comments")
-    .select("*")
+    .select(
+      `
+      id,
+      content,
+      by_user (
+        id,
+        email
+      )
+    `,
+    )
     .eq("post_id", post_id)
     // supabase range function is 0 based and right inclusive
     .range(

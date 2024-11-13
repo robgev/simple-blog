@@ -42,7 +42,17 @@ router.get("/", authenticateUser, async (req: Request, res: Response) => {
   const pageNumber = parseInt(page as string);
   const { data, error } = await supabase
     .from("posts")
-    .select("*")
+    .select(
+      `
+      id,
+      title,
+      content,
+      created_by (
+        id,
+        email
+      )
+    `,
+    )
     .order("id")
     // supabase range function is 0 based and right inclusive
     .range(
@@ -62,8 +72,19 @@ router.get(
     const { id } = req.params;
     const { data, error } = await supabase
       .from("posts")
-      .select("*")
-      .eq("id", id);
+      .select(
+        `
+        id,
+        title,
+        content,
+        created_by (
+          id,
+          email
+        )
+      `,
+      )
+      .eq("id", id)
+      .single();
 
     if (error) throw new ServerError(400, (error as Error).message);
     res.status(200).send(data);
