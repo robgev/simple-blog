@@ -10,8 +10,9 @@ export const endpoints = {
     root: "/posts",
   },
   comments: {
-    byId: (id: string) => `/comments/${id}`,
-    list: (page: number) => `/posts?page=${page}`,
-    root: "/comments",
-  }
-}
+    byId: (postId: string, id: string) => `/posts/${postId}/comments/${id}`,
+    list: (postId: string, page: number) =>
+      `/posts/${postId}/comments?page=${page}`,
+    root: (postId: string) => `/posts/${postId}/comments`,
+  },
+};
