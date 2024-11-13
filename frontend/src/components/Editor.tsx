@@ -57,7 +57,7 @@ const Editor: React.FC<EditorProps> = ({ title, content, onSubmit }) => {
             {...register("content", { value: content })}
             rows={6}
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-          ></textarea>
+          />
           {errors.content && (
             <p className="text-red-500 text-sm mt-1">
               {errors.content.message}
