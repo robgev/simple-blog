@@ -22,11 +22,10 @@ const LoginPage: React.FC = () => {
         email,
         password,
       });
-      console.log(data);
       TokenProvider.set(data.access_token);
 
       setLoading(false);
-      navigate("/dashboard");
+      navigate("/posts");
     } catch (e) {
       const error = e as Error;
       setError(error.message);
