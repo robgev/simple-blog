@@ -1,5 +1,11 @@
+import { useState } from "react";
 import { useParams } from "react-router-dom";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 
 import CommentRow from "../components/CommentRow";
 import CommentEditor from "../components/CommentEditor";
@@ -9,6 +15,7 @@ import { CommentData } from "../validators";
 import { TComment } from "../types";
 
 export default function SinglePost() {
+  const [page, setPage] = useState(0);
   const params = useParams();
   const queryClient = useQueryClient();
   const id = parseInt(params.id || "0");
@@ -20,10 +27,15 @@ export default function SinglePost() {
     queryFn: async () => fetcher(endpoints.posts.byId(id)),
   });
 
-  const { data: comments, isLoading: isLoadingComments } = useQuery({
-    queryKey: ["comments", id],
+  const {
+    data,
+    isLoading: isLoadingComments,
+    isPlaceholderData,
+  } = useQuery({
+    queryKey: ["comments", id, page],
     enabled: Boolean(id),
-    queryFn: async () => fetcher(endpoints.comments.list(id, 0)),
+    queryFn: async () => fetcher(endpoints.comments.list(id, page)),
+    placeholderData: keepPreviousData,
   });
 
   const deletePostMutation = useMutation({
@@ -61,7 +73,7 @@ export default function SinglePost() {
       <h4>Comments</h4>
       <div>
         <CommentEditor onSubmit={onSubmit} />
-        {comments?.map((comment: TComment) => (
+        {data?.items?.map((comment: TComment) => (
           <CommentRow
             key={comment.id}
             postId={id}
@@ -69,6 +81,24 @@ export default function SinglePost() {
             {...comment}
           />
         ))}
+        <span>Current Page: {page + 1}</span>
+        <button
+          onClick={() => setPage((old) => Math.max(old - 1, 0))}
+          disabled={page === 0}
+        >
+          Previous Page
+        </button>
+        <button
+          onClick={() => {
+            if (!isPlaceholderData && data.hasMore) {
+              setPage((old) => old + 1);
+            }
+          }}
+          // Disable the Next Page button until we know a next page is available
+          disabled={isPlaceholderData || !data?.hasMore}
+        >
+          Next Page
+        </button>
       </div>
     </div>
   );

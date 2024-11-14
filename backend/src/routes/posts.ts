@@ -61,7 +61,9 @@ router.get("/", authenticateUser, async (req: Request, res: Response) => {
     );
 
   if (error) throw new ServerError(400, (error as Error).message);
-  res.status(200).json(data);
+  res
+    .status(200)
+    .json({ items: data, hasMore: data.length === POSTS_PAGE_SIZE });
 });
 
 router.get(

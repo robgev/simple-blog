@@ -1,4 +1,10 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 
 import PostRow from "../components/PostRow";
@@ -7,10 +13,12 @@ import { endpoints } from "../utils/endpoints";
 import { TPost } from "../types";
 
 export default function Posts() {
+  const [page, setPage] = useState(0);
   const queryClient = useQueryClient();
-  const { data: posts, isLoading } = useQuery({
-    queryKey: ["posts"],
-    queryFn: async () => fetcher(endpoints.posts.list(0)),
+  const { data, isLoading, isPlaceholderData } = useQuery({
+    queryKey: ["posts", page],
+    queryFn: async () => fetcher(endpoints.posts.list(page)),
+    placeholderData: keepPreviousData,
   });
 
   const deletePostMutation = useMutation({
@@ -34,9 +42,27 @@ export default function Posts() {
           Create new
         </Link>
       </div>
-      {posts.map((post: TPost) => (
+      {data?.items.map((post: TPost) => (
         <PostRow key={post.id} {...post} onDelete={onDelete} />
       ))}
+      <span>Current Page: {page + 1}</span>
+      <button
+        onClick={() => setPage((old) => Math.max(old - 1, 0))}
+        disabled={page === 0}
+      >
+        Previous Page
+      </button>
+      <button
+        onClick={() => {
+          if (!isPlaceholderData && data.hasMore) {
+            setPage((old) => old + 1);
+          }
+        }}
+        // Disable the Next Page button until we know a next page is available
+        disabled={isPlaceholderData || !data?.hasMore}
+      >
+        Next Page
+      </button>
     </>
   );
 }
