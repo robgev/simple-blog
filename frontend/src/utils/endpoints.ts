@@ -2,7 +2,7 @@ export const endpoints = {
   auth: {
     register: "/user/register",
     login: "/user/login",
-    user: "/user/user",
+    user: "/user",
   },
   posts: {
     byId: (id: number) => `/posts/${id}`,

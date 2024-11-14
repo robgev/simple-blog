@@ -59,11 +59,9 @@ router.post("/register", async (req: Request, res: Response) => {
 });
 
 router.get("/", authenticateUser, async (_: Request, res: Response) => {
-  const { data, error } = await supabase.auth.getUser();
+  const { email, id } = res.locals.user;
 
-  if (error) throw new ServerError(error?.status || 400, error?.message);
-
-  res.status(200).json(data);
+  res.status(200).json({ id, email });
 });
 
 export default router;

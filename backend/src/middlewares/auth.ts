@@ -56,7 +56,7 @@ export const authorizeCommentChange = async (
     } else {
       const { by_user } = data[0];
 
-      if (user?.role !== "admin" || user.id !== by_user) {
+      if (user?.role !== "admin" && user.id !== by_user) {
         res.status(403).json({ error: "Forbidden" });
       }
     }

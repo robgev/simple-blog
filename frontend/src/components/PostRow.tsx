@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { TPost } from "../types";
+import { useUser } from "../hooks/user";
 
 type PostRowProps = TPost & {
   onDelete: (id: number) => void;
@@ -9,24 +10,29 @@ const PostRow = ({
   id,
   title,
   content,
-  created_by: { email },
+  created_by: { id: userId, email },
   onDelete,
 }: PostRowProps) => {
+  const { user, isLoadingUser } = useUser();
   const handleDelete = () => {
     onDelete(id);
   };
 
+  if (isLoadingUser) return null;
+
   return (
     <div className="border">
-      <div className="flex">
-        <button onClick={handleDelete}>delete</button>
-        <Link
-          to={`/post/${id}/edit`}
-          className="text-inherit hover:text-inherit"
-        >
-          <button>edit</button>
-        </Link>
-      </div>
+      {user?.id === userId && (
+        <div className="flex">
+          <button onClick={handleDelete}>delete</button>
+          <Link
+            to={`/post/${id}/edit`}
+            className="text-inherit hover:text-inherit"
+          >
+            <button>edit</button>
+          </Link>
+        </div>
+      )}
       <Link to={`/post/${id}`}>
         <h3>{title}</h3>
       </Link>

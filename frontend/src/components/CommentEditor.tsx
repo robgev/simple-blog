@@ -4,15 +4,16 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { commentSchema, CommentData } from "../validators";
 import { AxiosError } from "axios";
 
-type EditorProps = {
+type CommentEditorProps = {
   content?: string;
   onSubmit: (data: CommentData) => void;
 };
 
-const Editor: React.FC<EditorProps> = ({ content, onSubmit }) => {
+const CommentEditor: React.FC<CommentEditorProps> = ({ content, onSubmit }) => {
   const [error, setError] = useState<string | null>(null);
 
   const {
+    reset,
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
@@ -25,6 +26,9 @@ const Editor: React.FC<EditorProps> = ({ content, onSubmit }) => {
 
     try {
       onSubmit(comment);
+      if (!content) {
+        reset();
+      }
     } catch (error) {
       setError((error as AxiosError).message);
     }
@@ -63,4 +67,4 @@ const Editor: React.FC<EditorProps> = ({ content, onSubmit }) => {
   );
 };
 
-export default Editor;
+export default CommentEditor;
