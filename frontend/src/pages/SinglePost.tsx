@@ -27,11 +27,7 @@ export default function SinglePost() {
     queryFn: async () => fetcher(endpoints.posts.byId(id)),
   });
 
-  const {
-    data,
-    isLoading: isLoadingComments,
-    isPlaceholderData,
-  } = useQuery({
+  const { data, isPlaceholderData } = useQuery({
     queryKey: ["comments", id, page],
     enabled: Boolean(id),
     queryFn: async () => fetcher(endpoints.comments.list(id, page)),

@@ -22,7 +22,7 @@ app
 
   // Error handling/monitoring
   .use(errorHandler)
-  .get("/", (_, res) => {
+  .get("/api", (_, res) => {
     res.send("Healthy");
   });
 
